@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks/useDebounce';
 import { searchMovies } from '@/lib/api';
@@ -33,9 +33,23 @@ export default function MoviesPage() {
   const debouncedSearch = useDebounce(searchTerm, 500);
   const dispatch = useDispatch();
 
+  // Add debug logging for environment variable
+  useEffect(() => {
+    console.log('API Key exists:', !!process.env.NEXT_PUBLIC_OMDB_API_KEY);
+  }, []);
+
   const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ['movies', debouncedSearch],
-    queryFn: () => searchMovies(debouncedSearch),
+    queryFn: async () => {
+      try {
+        const result = await searchMovies(debouncedSearch);
+        console.log('Search results:', result);
+        return result;
+      } catch (err) {
+        console.error('Search error:', err);
+        throw err;
+      }
+    },
     enabled: debouncedSearch.length > 2,
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     retry: 1,

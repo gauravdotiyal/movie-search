@@ -3,15 +3,24 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'm.media-amazon.com',
-      },
-      {
         protocol: 'https',
         hostname: 'm.media-amazon.com',
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "upgrade-insecure-requests"
+          }
+        ]
+      }
+    ]
+  }
 };
 
 export default nextConfig; 

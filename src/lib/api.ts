@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
-// Create axios instance with the correct base URL
+// Create axios instance with HTTPS URL
 const api = axios.create({
-  baseURL: 'http://www.omdbapi.com',
+  baseURL: 'https://www.omdbapi.com',
 });
 
 if (!API_KEY) {
